@@ -1,5 +1,9 @@
 import useInput from "../hooks/use-input";
 
+//these functions won't be recreated, more react like
+const isNotEmpty = (value) => value.trim() !== "";
+const isEmail = (value) => value.trim().includes("@");
+
 const BasicForm = (props) => {
   const {
     inputValue: nameInputValue,
@@ -8,7 +12,7 @@ const BasicForm = (props) => {
     hasError: nameInputHasError,
     reset: nameInputReset,
     isValueValid: isNameValueValid,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(isNotEmpty);
 
   const {
     inputValue: lNameInputValue,
@@ -17,7 +21,7 @@ const BasicForm = (props) => {
     hasError: lNameInputHasError,
     reset: lNameInputReset,
     isValueValid: isLNameValueValid,
-  } = useInput((value) => value.trim() !== "");
+  } = useInput(isNotEmpty);
 
   const {
     inputValue: emailInputValue,
@@ -26,16 +30,19 @@ const BasicForm = (props) => {
     hasError: emailInputHasError,
     reset: emailInputReset,
     isValueValid: isEmailValueValid,
-  } = useInput((value) => value.trim().includes("@"));
+  } = useInput(isEmail);
 
   let isFormValid = false;
   if (isNameValueValid && isLNameValueValid && isEmailValueValid) {
     isFormValid = true;
   }
-  const formSubmissionHandler = () => {
-    if (!isNameValueValid || !isLNameValueValid || !isEmailValueValid) {
+  const formSubmissionHandler = (event) => {
+    event.preventDefault();
+    if (!isFormValid) {
       return;
     }
+    console.log("Submitted");
+    console.log(nameInputValue, lNameInputValue, emailInputValue);
     nameInputReset();
     lNameInputReset();
     emailInputReset();
